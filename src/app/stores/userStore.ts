@@ -19,7 +19,7 @@ export default class UserStore {
                 store.commonStore.setToken(this.user.token);
             }
             if (this.user?.role.includes("Admin")) {
-                router.navigate("/")
+                router.navigate("/admin")
             } else if (this.user?.role.includes("Client")) {
                 router.navigate("/")
             }
@@ -42,8 +42,9 @@ export default class UserStore {
         }
         runInAction(() => {
             this.user = user.data;
+            console.log(this.user?.role)
             if (this.user?.role.includes('Admin') && !location.pathname.includes('admin')) {
-                router.navigate("/");
+                router.navigate("/admin");
             } else if (this.user?.role.includes('Client') && !location.pathname.includes('client')) {
                 router.navigate("/");
             }

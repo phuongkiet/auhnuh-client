@@ -1,12 +1,12 @@
-import {Outlet, useLocation} from "react-router-dom";
-import {useStore} from "../stores/store.ts";
-import {useEffect} from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { useStore } from "../stores/store.ts";
+import { useEffect } from "react";
 import NavBar from "./NavBar.tsx";
 import Footer from "./Footer.tsx";
+import AdminDefaultLayout from "./admin/AdminDefaultLayout.tsx";
 
 function App() {
-
-    const {commonStore, userStore} = useStore();
+    const { commonStore, userStore } = useStore();
     const location = useLocation();
 
     useEffect(() => {
@@ -17,33 +17,23 @@ function App() {
         }
     }, [commonStore, userStore]);
 
-    return (
-        <>
-            {/*{*/}
-            {/*    location.pathname.includes("/") ? <Outlet/> :*/}
-            {/*        location.pathname === '/admin' || userStore.user?.role.includes('Admin') ?*/}
-            {/*            <div className="app">*/}
-            {/*                <NavBar/>*/}
-            {/*                <Outlet/>*/}
-            {/*            </div> : location.pathname === '/client' || userStore.user?.role.includes('Client') ?*/}
-            {/*                <div className="app">*/}
-            {/*                    <NavBar/>*/}
-            {/*                    <Outlet/>*/}
-            {/*                </div> : <div className="app">*/}
-            {/*                    <NavBar/>*/}
-            {/*                    <Outlet/>*/}
-            {/*                </div>*/}
-            {/*}*/}
+    // Check if the user is on an admin route
+    const isAdminRoute = location.pathname.startsWith("/admin");
+    const isAdmin = userStore.user?.role.includes("Admin");
 
-            <div className="app">
-                {/* Always show the NavBar unless on a special page */}
-                {!location.pathname.includes("/login") && <NavBar/>}
-                <NavBar/>
-                <Outlet/>
-                <Footer/>
-            </div>
-        </>
-    )
+    return (
+        <div className="app">
+            {isAdminRoute && isAdmin ? (
+                <AdminDefaultLayout />
+            ) : (
+                <>
+                    <NavBar />
+                    <Outlet />
+                    <Footer />
+                </>
+            )}
+        </div>
+    );
 }
 
-export default App
+export default App;

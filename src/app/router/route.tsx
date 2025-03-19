@@ -6,12 +6,17 @@ import Login from "../../pages/authentication/Login.tsx";
 import MovieDetail from "../../pages/movie/MovieDetail.tsx";
 import HomePage from "../../pages/homepage/HomePage.tsx";
 import MovieStreaming from "../../pages/movie/MovieStreaming.tsx";
+import {ProtectedRoute} from "./protectedRoute.tsx";
+import UserManagement from "../../pages/admin/UserManagement.tsx";
 
 export const routes: RouteObject[] = [
     {
         path: "/",
         element: <App />,
         children: [
+            {element : <ProtectedRoute allowedRoles={['Admin']}/>, children: [
+                    {path: '/admin', element: <UserManagement/>},
+                ]},
             {
               path: "/",
               element: <HomePage/>
@@ -28,7 +33,7 @@ export const routes: RouteObject[] = [
                 path: "/movie/detail/movie-streaming/:episodeId",
                 element: <MovieStreaming/>
             },
-            {path: 'not-found', element: <NotFound/>},
+            {path: '/not-found', element: <NotFound/>},
             {path: 'server-error', element: <ServerError/>},
             {path: '*', element: <Navigate to='not-found' replace/>},
         ],
