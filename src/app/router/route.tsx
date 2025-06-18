@@ -1,4 +1,4 @@
-import {createBrowserRouter, Navigate, RouteObject} from "react-router-dom";
+import {createBrowserRouter, RouteObject} from "react-router-dom";
 import App from "../layout/App.tsx";
 import NotFound from "../../pages/errors/NotFound.tsx";
 import ServerError from "../../pages/errors/ServerError.tsx";
@@ -35,7 +35,7 @@ export const routes: RouteObject[] = [
             },
             {path: '/not-found', element: <NotFound/>},
             {path: 'server-error', element: <ServerError/>},
-            {path: '*', element: <Navigate to='not-found' replace/>},
+            {path: '*', element: <NotFound/>},
         ],
     }
 ];

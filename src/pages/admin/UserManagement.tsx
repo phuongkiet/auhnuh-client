@@ -1,4 +1,52 @@
+import {useEffect, useState} from "react";
+import {Role, UserAdminDTO, UserStatus} from "../../app/models/user.model.ts";
+import agent from "../../app/api/agent.ts";
+import {toast} from "react-toastify";
+
 const UserManagement = () => {
+    const [user, setUser] = useState<UserAdminDTO[]>([]);
+    const [total, setTotal] = useState<number | undefined>(0);
+    const [pageNumber, setPageNumber] = useState(1)
+    const [term, setTerm] = useState("");
+
+    const getUserAdmin = async () => {
+        try{
+            const response = await agent.UserAdmin.adminList(5, pageNumber, term);
+            if(response.data){
+                setUser(response.data?.results);
+                setTotal(response.data.totalPage);
+            }
+        }catch (err){
+            toast.error("Error: " + err);
+        }
+    }
+
+    useEffect(() => {
+        getUserAdmin();
+    }, [pageNumber]);
+
+    const getStatusLabel = (status: number) => {
+        switch (status) {
+            case UserStatus.Active:
+                return "Active";
+            case UserStatus.InActive:
+                return "In Active";
+            default:
+                return "Unknown Status";
+        }
+    };
+
+    const getRoleLabel = (role: number) => {
+        switch (role) {
+            case Role.Admin:
+                return "Admin";
+            case Role.Client:
+                return "Client";
+            default:
+                return "Unknown Role";
+        }
+    }
+
     return(
         <div>
             <header className="mb-8">
@@ -23,53 +71,67 @@ const UserManagement = () => {
                         <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">ID</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Name</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Email</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Phone
+                            Number
+                        </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Role</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
                     </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200">
-                    {[1, 2, 3, 4, 5].map((item) => (
-                        <tr key={item} className="hover:bg-slate-50 transition-colors duration-150">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">#{item}001</td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="flex items-center">
-                                    <div
-                                        className="h-10 w-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-700 font-medium">
-                                        {String.fromCharCode(64 + item)}
+                    {user.length > 0 ? (
+                        user?.map((item) => (
+                            <tr key={item.id} className="hover:bg-slate-50 transition-colors duration-150">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">#{item.id}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="flex items-center">
+                                        <div
+                                            className="h-10 w-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-700 font-medium">
+                                            {item.name[0].toUpperCase()}
+                                        </div>
+                                        <div className="ml-4">
+                                            <div className="text-sm font-medium text-slate-900">{item.name}</div>
+                                            <div
+                                                className="text-sm text-slate-500">Joined {new Date(item.createdAt).getFullYear()}</div>
+                                        </div>
                                     </div>
-                                    <div className="ml-4">
-                                        <div className="text-sm font-medium text-slate-900">User {item}</div>
-                                        <div className="text-sm text-slate-500">Joined 2023</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">user{item}@example.com</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{item % 2 === 0 ? 'Admin' : 'User'}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                        <span
-                                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                                item % 3 === 0 ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
-                                            }`}>
-                                            {item % 3 === 0 ? 'Pending' : 'Active'}
-                                        </span>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                                <button
-                                    className="text-blue-600 hover:text-blue-900 transition-colors duration-200 hover:underline">
-                                    View
-                                </button>
-                                <button
-                                    className="text-emerald-600 hover:text-emerald-900 transition-colors duration-200 hover:underline">
-                                    Edit
-                                </button>
-                                <button
-                                    className="text-red-600 hover:text-red-900 transition-colors duration-200 hover:underline">
-                                    Delete
-                                </button>
-                            </td>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{item.email}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{item.phoneNumber || "N/A"}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                                    {getRoleLabel(item.roleId)}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                item.status === UserStatus.Active ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                            }`}
+                        >
+                            {getStatusLabel(item.status)}
+                        </span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                    <button
+                                        className="text-blue-600 hover:text-blue-900 transition-colors duration-200 hover:underline">
+                                        View
+                                    </button>
+                                    <button
+                                        className="text-emerald-600 hover:text-emerald-900 transition-colors duration-200 hover:underline">
+                                        Edit
+                                    </button>
+                                    <button
+                                        className="text-red-600 hover:text-red-900 transition-colors duration-200 hover:underline">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                        <td colSpan={7} className="text-center py-4 text-slate-500">No users found.</td>
                         </tr>
-                    ))}
+                    )}
                     </tbody>
                 </table>
 

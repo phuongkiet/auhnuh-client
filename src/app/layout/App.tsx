@@ -28,7 +28,9 @@ function App() {
             ) : (
                 <>
                     <NavBar />
-                    <Outlet />
+                    <main className="flex-1 flex flex-col justify-center items-center">
+                        <Outlet />
+                    </main>
                     <Footer />
                 </>
             )}

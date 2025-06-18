@@ -814,3 +814,15 @@ video {
     display: flex;
   }
 }
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app main {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}

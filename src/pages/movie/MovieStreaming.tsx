@@ -22,7 +22,7 @@ const MovieStreaming = () => {
     }
 
     return (
-        <div id="webcrumbs">
+        <div id="webcrumbs" className='w-full min-h-scree text-white'>
             <div className="pt-20 pb-10 bg-black text-white font-sans">
                 <div className="relative aspect-video bg-gray-900 mb-6 rounded overflow-hidden group">
                     {/* YouTube Embed */}

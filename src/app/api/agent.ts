@@ -1,9 +1,10 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { router } from "../router/route.tsx";
+import axios, {AxiosError, AxiosResponse} from "axios";
+import {router} from "../router/route.tsx";
 import {toast} from "react-toastify";
 import {store} from "../stores/store.ts";
-import {User, UserLoginFormValues} from "../models/user.model.ts";
+import {User, UserAdminDTO, UserLoginFormValues} from "../models/user.model.ts";
 import {MovieDetailDTO, MovieDTO} from "../models/movie.model.ts";
+import {PagedModel} from "../models/PagedModel.model.ts";
 
 export interface ApiResponseModel<T> {
     success: boolean;
@@ -18,7 +19,7 @@ axios.interceptors.response.use(async response => {
     // if (import.meta.env.DEV) await sleep(1000);
     return response;
 }, (error: AxiosError) => {
-    const { data, status, config } = error.response as AxiosResponse;
+    const {data, status, config} = error.response as AxiosResponse;
     switch (status) {
         case 400: {
             console.log(data);
@@ -93,12 +94,24 @@ const Account = {
 
 const Movie = {
     list: (): Promise<ApiResponseModel<MovieDTO[]>> => requests.get<MovieDTO[]>('/movie/movies'),
-    getMovieDetail: (id: number): Promise<ApiResponseModel<MovieDetailDTO>> =>  requests.get<MovieDetailDTO>(`/movie/movie-detail?id=${id}`),
+    getMovieDetail: (id: number): Promise<ApiResponseModel<MovieDetailDTO>> => requests.get<MovieDetailDTO>(`/movie/movie-detail?id=${id}`),
+}
+
+const UserAdmin = {
+    adminList: (pageSize?: number, pageNumber?: number, term?: string): Promise<ApiResponseModel<PagedModel<UserAdminDTO>>> => {
+        const params = new URLSearchParams();
+        if (pageSize) params.append("pageSize", pageSize.toString());
+        if (pageNumber) params.append("pageNumber", pageNumber.toString());
+        if (term) params.append("term", term);
+
+        return requests.get<PagedModel<UserAdminDTO>>(`/user?${params.toString()}`);
+    }
 }
 
 const agent = {
     Account,
-    Movie
+    Movie,
+    UserAdmin
 }
 
 export default agent;
