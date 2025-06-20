@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import {MovieDTO} from "../../app/models/movie.model.ts";
 
 type PopularAnimeProps = {
@@ -5,6 +6,7 @@ type PopularAnimeProps = {
 };
 
 const PopularAnime: React.FC<PopularAnimeProps> = ({ anime }) => {
+    const navigate = useNavigate();
     const scrollContainer = (direction: "left" | "right") => {
         const container = document.querySelector(".scrollable-container");
         if (container) {
@@ -30,6 +32,7 @@ const PopularAnime: React.FC<PopularAnimeProps> = ({ anime }) => {
                                 <div className="flex items-center mt-2 space-x-2">
                                     <button
                                         className="bg-white text-black rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors duration-300"
+                                        onClick={() => navigate(`/movie/detail/${item.movieId}`)}
                                     >
                                         <span className="material-symbols-outlined text-sm">play_arrow</span>
                                     </button>
