@@ -1,28 +1,17 @@
-import {useEffect, useState} from "react";
-import {Role, UserAdminDTO, UserStatus} from "../../app/models/user.model.ts";
-import agent from "../../app/api/agent.ts";
-import {toast} from "react-toastify";
+import {useEffect} from "react";
+import {Role, UserStatus} from "../../app/models/user.model.ts";
+import {useStore} from "../../app/stores/store.ts";
+import { observer } from "mobx-react-lite";
+import { FaEye, FaPencilAlt } from "react-icons/fa";
+import { FaRegTrashCan } from "react-icons/fa6";
 
 const UserManagement = () => {
-    const [user, setUser] = useState<UserAdminDTO[]>([]);
-    const [total, setTotal] = useState<number | undefined>(0);
-    const [pageNumber, setPageNumber] = useState(1)
-    const [term, setTerm] = useState("");
-
-    const getUserAdmin = async () => {
-        try{
-            const response = await agent.UserAdmin.adminList(5, pageNumber, term);
-            if(response.data){
-                setUser(response.data?.results);
-                setTotal(response.data.totalPage);
-            }
-        }catch (err){
-            toast.error("Error: " + err);
-        }
-    }
+    const {userStore} = useStore();
+    const {adminList, userAdmin, total, pageNumber, term, setPageNumber, setTerm} = userStore;
 
     useEffect(() => {
-        getUserAdmin();
+        adminList();
+        console.log("User Admin List: ", userAdmin);
     }, [pageNumber]);
 
     const getStatusLabel = (status: number) => {
@@ -79,9 +68,9 @@ const UserManagement = () => {
                         <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
                     </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-200">
-                    {user.length > 0 ? (
-                        user?.map((item) => (
+                    <tbody className="divide-y divide-slate-200">                   
+                    {userAdmin.length > 0 ? (
+                        userAdmin?.map((item) => (
                             <tr key={item.id} className="hover:bg-slate-50 transition-colors duration-150">
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">#{item.id}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">
@@ -111,25 +100,25 @@ const UserManagement = () => {
                             {getStatusLabel(item.status)}
                         </span>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                <td className="px-6 py-4 whitespace-nowrap text-xl font-medium space-x-2">
                                     <button
                                         className="text-blue-600 hover:text-blue-900 transition-colors duration-200 hover:underline">
-                                        View
+                                        <FaEye className="inline-block mr-1" />
                                     </button>
                                     <button
                                         className="text-emerald-600 hover:text-emerald-900 transition-colors duration-200 hover:underline">
-                                        Edit
+                                        <FaPencilAlt className="inline-block mr-1" />
                                     </button>
                                     <button
                                         className="text-red-600 hover:text-red-900 transition-colors duration-200 hover:underline">
-                                        Delete
+                                        <FaRegTrashCan className="inline-block mr-1" />
                                     </button>
                                 </td>
                             </tr>
                         ))
                     ) : (
                         <tr>
-                        <td colSpan={7} className="text-center py-4 text-slate-500">No users found.</td>
+                            <td colSpan={7} className="text-center py-4 text-slate-500">No users found.</td>
                         </tr>
                     )}
                     </tbody>
@@ -168,4 +157,4 @@ const UserManagement = () => {
     )
 }
 
-export default UserManagement;
+export default observer(UserManagement);

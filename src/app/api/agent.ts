@@ -2,7 +2,7 @@ import axios, {AxiosError, AxiosResponse} from "axios";
 import {router} from "../router/route.tsx";
 import {toast} from "react-toastify";
 import {store} from "../stores/store.ts";
-import {User, UserAdminDTO, UserLoginFormValues} from "../models/user.model.ts";
+import {User, UserAdminDTO, UserDTO, UserLoginFormValues} from "../models/user.model.ts";
 import {MovieDetailDTO, MovieDTO} from "../models/movie.model.ts";
 import {PagedModel} from "../models/PagedModel.model.ts";
 
@@ -104,8 +104,19 @@ const UserAdmin = {
         if (pageNumber) params.append("pageNumber", pageNumber.toString());
         if (term) params.append("term", term);
 
-        return requests.get<PagedModel<UserAdminDTO>>(`/user?${params.toString()}`);
-    }
+        return requests.get<PagedModel<UserAdminDTO>>(`/user/users?${params.toString()}`);
+    },
+
+    adminDetails: (id: number): Promise<ApiResponseModel<UserDTO>> => requests.get<UserDTO>(`/user/user-detail?id=${id}`),
+
+    adminCreate: (user: UserAdminDTO): Promise<ApiResponseModel<UserAdminDTO>> => requests.post<UserAdminDTO>('/user/add-user', user),
+
+    adminUpdate: (id: number, user: UserAdminDTO): Promise<ApiResponseModel<UserAdminDTO>> => requests.put<UserAdminDTO>(`/user/update-user?id=${id}`, user),
+
+    adminDelete: (id: number): Promise<ApiResponseModel<UserAdminDTO>> => requests.del<UserAdminDTO>(`/user/delete-user?id=${id}`),
+
+    adminBan: (id: number): Promise<ApiResponseModel<UserAdminDTO>> => requests.put<UserAdminDTO>(`/user/ban-user?id=${id}`, {}),
+
 }
 
 const agent = {
