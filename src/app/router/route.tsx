@@ -7,7 +7,8 @@ import MovieDetail from "../../pages/movie/MovieDetail.tsx";
 import HomePage from "../../pages/homepage/HomePage.tsx";
 import MovieStreaming from "../../pages/movie/MovieStreaming.tsx";
 import {ProtectedRoute} from "./protectedRoute.tsx";
-import UserManagement from "../../pages/admin/UserManagement.tsx";
+import UserManagement from "../../pages/admin/user/UserManagement.tsx";
+import MovieManagement from "../../pages/admin/movie/MovieManagement.tsx";
 
 export const routes: RouteObject[] = [
     {
@@ -15,7 +16,8 @@ export const routes: RouteObject[] = [
         element: <App />,
         children: [
             {element : <ProtectedRoute allowedRoles={['Admin']}/>, children: [
-                    {path: '/admin', element: <UserManagement/>},
+                    {path: '/admin/users', element: <UserManagement/>},
+                    {path: '/admin/movies', element: <MovieManagement/>},
                 ]},
             {
               path: "/",

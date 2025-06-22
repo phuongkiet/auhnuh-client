@@ -93,8 +93,16 @@ const Account = {
 };
 
 const Movie = {
-    list: (): Promise<ApiResponseModel<MovieDTO[]>> => requests.get<MovieDTO[]>('/movie/movies'),
-    getMovieDetail: (id: number): Promise<ApiResponseModel<MovieDetailDTO>> => requests.get<MovieDetailDTO>(`/movie/movie-detail?id=${id}`),
+    list: (): Promise<ApiResponseModel<MovieDTO[]>> => requests.get<MovieDTO[]>('/movies'),
+    adminList: (pageSize?: number, pageNumber?: number, term?: string): Promise<ApiResponseModel<PagedModel<MovieDTO>>> => {
+        const params = new URLSearchParams();
+        if (pageSize) params.append("pageSize", pageSize.toString());
+        if (pageNumber) params.append("pageNumber", pageNumber.toString());
+        if (term) params.append("term", term);
+
+        return requests.get<PagedModel<MovieDTO>>(`/movies/admin-movies?${params.toString()}`);
+    },
+    getMovieDetail: (id: number): Promise<ApiResponseModel<MovieDetailDTO>> => requests.get<MovieDetailDTO>(`/movies/movie-detail?id=${id}`),
 }
 
 const UserAdmin = {
@@ -104,18 +112,18 @@ const UserAdmin = {
         if (pageNumber) params.append("pageNumber", pageNumber.toString());
         if (term) params.append("term", term);
 
-        return requests.get<PagedModel<UserAdminDTO>>(`/user/users?${params.toString()}`);
+        return requests.get<PagedModel<UserAdminDTO>>(`/users?${params.toString()}`);
     },
 
-    adminDetails: (id: number): Promise<ApiResponseModel<UserDTO>> => requests.get<UserDTO>(`/user/user-detail?id=${id}`),
+    adminDetails: (id: number): Promise<ApiResponseModel<UserDTO>> => requests.get<UserDTO>(`/users/user-detail?id=${id}`),
 
-    adminCreate: (user: UserAdminDTO): Promise<ApiResponseModel<UserAdminDTO>> => requests.post<UserAdminDTO>('/user/add-user', user),
+    adminCreate: (user: UserAdminDTO): Promise<ApiResponseModel<UserAdminDTO>> => requests.post<UserAdminDTO>('/users/add-user', user),
 
-    adminUpdate: (id: number, user: UserAdminDTO): Promise<ApiResponseModel<UserAdminDTO>> => requests.put<UserAdminDTO>(`/user/update-user?id=${id}`, user),
+    adminUpdate: (id: number, user: UserAdminDTO): Promise<ApiResponseModel<UserAdminDTO>> => requests.put<UserAdminDTO>(`/users/update-user?id=${id}`, user),
 
-    adminDelete: (id: number): Promise<ApiResponseModel<UserAdminDTO>> => requests.del<UserAdminDTO>(`/user/delete-user?id=${id}`),
+    adminDelete: (id: number): Promise<ApiResponseModel<UserAdminDTO>> => requests.del<UserAdminDTO>(`/users/delete-user?id=${id}`),
 
-    adminBan: (id: number): Promise<ApiResponseModel<UserAdminDTO>> => requests.put<UserAdminDTO>(`/user/ban-user?id=${id}`, {}),
+    adminBan: (id: number): Promise<ApiResponseModel<UserAdminDTO>> => requests.put<UserAdminDTO>(`/users/ban-user?id=${id}`, {}),
 
 }
 

@@ -6,9 +6,9 @@ const AdminSideBar = () => {
     const { pathname } = location;
 
     return (
-        <aside className="w-72 min-h-screen bg-slate-800 text-white p-4 shadow-lg">
+        <aside className="h-full w-full bg-slate-800 text-white p-4 shadow-lg overflow-y-auto">
             <div className="mb-8">
-                <NavLink to={"/admin"}>
+                <NavLink to={"/admin/movies"}>
                     <h1 className="text-center text-red-500 text-2xl font-bold tracking-tight">AuhNuh System</h1>
                 </NavLink>
             </div>
@@ -28,13 +28,8 @@ const AdminSideBar = () => {
                         {open && (
                             <ul className="ml-6 mt-2 space-y-1">
                                 <li>
-                                    <NavLink to="/movies/all" className="block p-2 rounded-lg hover:bg-slate-700">
+                                    <NavLink to="/admin/movies" className="block p-2 rounded-lg hover:bg-slate-700">
                                         All Movies
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/movies/add" className="block p-2 rounded-lg hover:bg-slate-700">
-                                        Add Movie
                                     </NavLink>
                                 </li>
                             </ul>
@@ -58,13 +53,8 @@ const AdminSideBar = () => {
                         {open && (
                             <ul className="ml-6 mt-2 space-y-1">
                                 <li>
-                                    <NavLink to="/users/list" className="block p-2 rounded-lg hover:bg-slate-700">
+                                    <NavLink to="/admin/users" className="block p-2 rounded-lg hover:bg-slate-700">
                                         User List
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/users/add" className="block p-2 rounded-lg hover:bg-slate-700">
-                                        Add User
                                     </NavLink>
                                 </li>
                             </ul>
@@ -88,13 +78,8 @@ const AdminSideBar = () => {
                         {open && (
                             <ul className="ml-6 mt-2 space-y-1">
                                 <li>
-                                    <NavLink to="/categories/list" className="block p-2 rounded-lg hover:bg-slate-700">
+                                    <NavLink to="/admin/categories/list" className="block p-2 rounded-lg hover:bg-slate-700">
                                         All Categories
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/categories/add" className="block p-2 rounded-lg hover:bg-slate-700">
-                                        Add Category
                                     </NavLink>
                                 </li>
                             </ul>
