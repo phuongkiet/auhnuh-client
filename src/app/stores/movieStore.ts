@@ -11,7 +11,7 @@ export default class MovieStore {
     totalPages: number = 0;
     totalItems: number = 0;
     currentPage: number = 1;
-    pageSize: number = 5;
+    pageSize: number = 10;
     term: string = "";
     constructor() {
         makeAutoObservable(this);
@@ -30,6 +30,22 @@ export default class MovieStore {
 
     getAdminMovies = async () => {
         const response = await agent.Movie.adminList(this.pageSize, this.currentPage, this.term);
+        if (response.data) {
+            runInAction(() => {
+                this.movies = response.data!.results;
+                this.totalPages = response.data!.totalPage;
+                this.totalItems = response.data!.totalItems;
+                console.log("Store updated:", { 
+                    currentPage: this.currentPage, 
+                    totalPages: this.totalPages, 
+                    moviesLength: this.movies.length 
+                });
+            });
+        }
+    };
+
+    getMovieByCategory = async (categoryId: number | null) => {
+        const response = await agent.Movie.getMovieByCategory(this.pageSize, this.currentPage, categoryId);
         if (response.data) {
             runInAction(() => {
                 this.movies = response.data!.results;

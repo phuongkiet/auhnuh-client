@@ -24,7 +24,7 @@ const PopularAnime: React.FC<PopularAnimeProps> = ({ anime }) => {
                             key={index}
                             className="relative group cursor-pointer overflow-hidden rounded-md transition-transform duration-300 hover:scale-105 hover:z-10 min-w-[200px]"
                         >
-                            <img src={item.thumbnail} alt={item.title} className="w-[200px] h-[200px] object-cover" />
+                            <img src={item.thumbnail} alt={item.title} className="w-[200px] h-[200px] object-cover rounded-md" />
                             <div
                                 className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                             >

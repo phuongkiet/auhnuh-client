@@ -9,6 +9,7 @@ import MovieStreaming from "../../pages/movie/MovieStreaming.tsx";
 import {ProtectedRoute} from "./protectedRoute.tsx";
 import UserManagement from "../../pages/admin/user/UserManagement.tsx";
 import MovieManagement from "../../pages/admin/movie/MovieManagement.tsx";
+import MovieList from "../../pages/movie/MovieList.tsx";
 
 export const routes: RouteObject[] = [
     {
@@ -26,6 +27,10 @@ export const routes: RouteObject[] = [
             {
                 path: "/login",
                 element: <Login />,
+            },
+            {
+                path: "/movies",
+                element: <MovieList/>
             },
             {
                 path: "/movie/detail/:id",

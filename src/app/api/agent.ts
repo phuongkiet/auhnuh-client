@@ -4,6 +4,7 @@ import {toast} from "react-toastify";
 import {store} from "../stores/store.ts";
 import {User, UserAdminDTO, UserDTO, UserLoginFormValues} from "../models/user.model.ts";
 import {MovieDetailDTO, MovieDTO} from "../models/movie.model.ts";
+import {CategoryDTO} from "../models/category.model.ts";
 import {PagedModel} from "../models/PagedModel.model.ts";
 
 export interface ApiResponseModel<T> {
@@ -103,6 +104,13 @@ const Movie = {
         return requests.get<PagedModel<MovieDTO>>(`/movies/admin-movies?${params.toString()}`);
     },
     getMovieDetail: (id: number): Promise<ApiResponseModel<MovieDetailDTO>> => requests.get<MovieDetailDTO>(`/movies/movie-detail?id=${id}`),
+    getMovieByCategory: (pageSize?: number, pageNumber?: number, categoryId?: number | null): Promise<ApiResponseModel<PagedModel<MovieDTO>>> => {
+        const params = new URLSearchParams();
+        if (pageSize) params.append("pageSize", pageSize.toString());
+        if (pageNumber) params.append("pageNumber", pageNumber.toString());
+        if (categoryId) params.append("categoryId", categoryId.toString());
+        return requests.get<PagedModel<MovieDTO>>(`/movies/movies-by-category?${params.toString()}`);
+    },
 }
 
 const UserAdmin = {
@@ -127,10 +135,15 @@ const UserAdmin = {
 
 }
 
+const Category = {
+    list: (): Promise<ApiResponseModel<CategoryDTO[]>> => requests.get<CategoryDTO[]>('/categories'),
+}
+
 const agent = {
     Account,
     Movie,
-    UserAdmin
+    UserAdmin,
+    Category
 }
 
 export default agent;

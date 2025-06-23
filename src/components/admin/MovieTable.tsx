@@ -4,6 +4,7 @@ import { FaEye, FaPencilAlt } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { formatMovieStatus } from "../../app/common/stringUtils";
 import { useMemo } from "react";
+import Pagination from "../../app/common/Pagination";
 
 interface MovieTableProps {
   movies: MovieDTO[];
@@ -51,43 +52,6 @@ const MovieTable = ({
     if (page >= 1 && page <= actualTotalPages && onPageChange) {
       onPageChange(page);
     }
-  };
-
-  const renderPageNumbers = () => {
-    const pages = [];
-    const maxVisiblePages = 5;
-    
-    if (actualTotalPages <= maxVisiblePages) {
-      // Hiển thị tất cả trang nếu ít hơn maxVisiblePages
-      for (let i = 1; i <= actualTotalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      // Logic hiển thị trang với ellipsis
-      if (currentPage <= 3) {
-        for (let i = 1; i <= 4; i++) {
-          pages.push(i);
-        }
-        pages.push('...');
-        pages.push(actualTotalPages);
-      } else if (currentPage >= actualTotalPages - 2) {
-        pages.push(1);
-        pages.push('...');
-        for (let i = actualTotalPages - 3; i <= actualTotalPages; i++) {
-          pages.push(i);
-        }
-      } else {
-        pages.push(1);
-        pages.push('...');
-        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-          pages.push(i);
-        }
-        pages.push('...');
-        pages.push(actualTotalPages);
-      }
-    }
-    
-    return pages;
   };
 
   return (
@@ -216,46 +180,15 @@ const MovieTable = ({
       </div>
 
       <div className="px-6 py-4 flex items-center justify-between border-t border-slate-200 flex-shrink-0 bg-white">
-        <div className="text-sm text-slate-500">
-          Showing <span className="font-medium">{startItem}</span> to{" "}
-          <span className="font-medium">{endItem}</span> of{" "}
-          <span className="font-medium">{isServerSidePagination ? totalItems : movies.length}</span> results
-          <span className="ml-2 text-xs text-gray-400">
-            (Page {currentPage} of {actualTotalPages})
-          </span>
-        </div>
-        <div className="flex space-x-2">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            className="px-3 py-1 border border-slate-300 rounded-md text-sm hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={currentPage === 1}
-          >
-            Previous
-          </button>
-          {renderPageNumbers().map((page, index) => (
-            <button
-              key={index}
-              onClick={() => typeof page === 'number' && handlePageChange(page)}
-              className={`px-3 py-1 rounded-md text-sm transition-colors ${
-                page === currentPage 
-                  ? "bg-blue-600 text-white" 
-                  : typeof page === 'number'
-                    ? "border border-slate-300 hover:bg-slate-50"
-                    : "cursor-default"
-              }`}
-              disabled={typeof page !== 'number'}
-            >
-              {page}
-            </button>
-          ))}
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            className="px-3 py-1 border border-slate-300 rounded-md text-sm hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={currentPage === actualTotalPages}
-          >
-            Next
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={actualTotalPages}
+          onPageChange={handlePageChange}
+          pageSize={itemsPerPage}
+          startItem={startItem}
+          endItem={endItem}
+          totalItems={isServerSidePagination ? totalItems : movies.length}
+        />
       </div>
     </div>
   );
