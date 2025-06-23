@@ -2,8 +2,11 @@ import { observer } from "mobx-react-lite";
 import { UserAdminDTO, Role, UserStatus } from "../../app/models/user.model";
 import { FaEye, FaPencilAlt } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Pagination from "../../app/common/Pagination";
+import { useModal } from "../../hooks/useModal";
+import Modal from "../modal";
+import ViewModal from "../modal/admin/UserManagement/viewUser";
 
 interface UserTableProps {
   users: UserAdminDTO[];
@@ -31,6 +34,14 @@ const UserTable = ({
   // Use server-side pagination if totalPages is provided, otherwise client-side
   const isServerSidePagination = totalPages > 1;
   const actualTotalPages = isServerSidePagination ? totalPages : Math.ceil(users.length / itemsPerPage);
+
+  const { isOpen: isModalOpen, openModal, closeModal } = useModal();
+  const [selectedUser, setSelectedUser] = useState<UserAdminDTO | null>(null);
+
+  const handleCurrentUser = (user: UserAdminDTO) => {
+    setSelectedUser(user);
+    openModal();
+  };
   
   // Tính toán pagination
   const paginatedUsers = useMemo(() => {
@@ -87,7 +98,7 @@ const UserTable = ({
 
       <div className="flex-1 overflow-hidden">
         <table className="w-full">
-          <thead className="bg-slate-50 sticky top-0 z-10">
+          <thead className="bg-slate-50 top-0 z-10">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                 ID
@@ -160,7 +171,7 @@ const UserTable = ({
                   <td className="px-6 py-4 whitespace-nowrap text-xl font-medium space-x-2">
                     {onView && (
                       <button
-                        onClick={() => onView(user)}
+                        onClick={() => {onView(user); handleCurrentUser(user)}}
                         className="text-blue-600 hover:text-blue-900 transition-colors duration-200 hover:underline"
                       >
                         <FaEye className="inline-block mr-1" />
@@ -209,6 +220,17 @@ const UserTable = ({
           totalItems={isServerSidePagination ? totalItems : users.length}
           />
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        className="w-2/4 h-3/4"
+        children= {
+          selectedUser && (
+          <ViewModal user={selectedUser} />
+        )}
+      />
+      
     </div>
   );
 };
