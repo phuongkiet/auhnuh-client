@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { UserAdminDTO, Role, UserStatus } from "../../app/models/user.model";
+import { UserAdminDTO, UserStatus } from "../../app/models/user.model";
 import { FaEye, FaPencilAlt } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { useMemo, useState } from "react";
@@ -7,6 +7,7 @@ import Pagination from "../../app/common/Pagination";
 import { useModal } from "../../hooks/useModal";
 import Modal from "../modal";
 import ViewModal from "../modal/admin/UserManagement/viewUser";
+import { getRoleLabel, getStatusLabel } from "../../app/common/stringUtils";
 
 interface UserTableProps {
   users: UserAdminDTO[];
@@ -61,28 +62,6 @@ const UserTable = ({
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= actualTotalPages && onPageChange) {
       onPageChange(page);
-    }
-  };
-
-  const getStatusLabel = (status: number) => {
-    switch (status) {
-      case UserStatus.Active:
-        return "Active";
-      case UserStatus.InActive:
-        return "In Active";
-      default:
-        return "Unknown Status";
-    }
-  };
-
-  const getRoleLabel = (role: number) => {
-    switch (role) {
-      case Role.Admin:
-        return "Admin";
-      case Role.Client:
-        return "Client";
-      default:
-        return "Unknown Role";
     }
   };
 
@@ -230,7 +209,7 @@ const UserTable = ({
           <ViewModal user={selectedUser} />
         )}
       />
-      
+
     </div>
   );
 };
