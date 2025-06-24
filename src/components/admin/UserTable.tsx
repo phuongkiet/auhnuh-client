@@ -1,17 +1,16 @@
 import { observer } from "mobx-react-lite";
 import { UserAdminDTO, UserStatus } from "../../app/models/user.model";
-import { FaEye, FaPencilAlt } from "react-icons/fa";
+import { FaEye} from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Pagination from "../../app/common/Pagination";
-import { useModal } from "../../hooks/useModal";
-import Modal from "../modal";
-import ViewModal from "../modal/admin/UserManagement/viewUser";
 import { getRoleLabel, getStatusLabel } from "../../app/common/stringUtils";
+import { FaGavel } from "react-icons/fa";
 
 interface UserTableProps {
   users: UserAdminDTO[];
-  onEdit?: (user: UserAdminDTO) => void;
+  onAdd?: () => void;
+  onBan?: (user: UserAdminDTO) => void;
   onDelete?: (user: UserAdminDTO) => void;
   onView?: (user: UserAdminDTO) => void;
   itemsPerPage?: number;
@@ -22,10 +21,11 @@ interface UserTableProps {
 }
 
 const UserTable = ({ 
-  users, 
-  onEdit, 
+  users,
+  onAdd,
+  onBan, 
   onDelete, 
-  onView, 
+  onView,
   itemsPerPage = 10,
   totalPages = 1,
   totalItems = 0,
@@ -36,14 +36,6 @@ const UserTable = ({
   const isServerSidePagination = totalPages > 1;
   const actualTotalPages = isServerSidePagination ? totalPages : Math.ceil(users.length / itemsPerPage);
 
-  const { isOpen: isModalOpen, openModal, closeModal } = useModal();
-  const [selectedUser, setSelectedUser] = useState<UserAdminDTO | null>(null);
-
-  const handleCurrentUser = (user: UserAdminDTO) => {
-    setSelectedUser(user);
-    openModal();
-  };
-  
   // Tính toán pagination
   const paginatedUsers = useMemo(() => {
     if (isServerSidePagination) {
@@ -69,7 +61,9 @@ const UserTable = ({
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden h-full flex flex-col">
       <div className="p-4 flex justify-between items-center border-b border-slate-200 flex-shrink-0">
         <h2 className="font-semibold text-lg">User List</h2>
-        <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 flex items-center">
+        <button 
+          onClick={() => {onAdd && onAdd()}}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 flex items-center">
           <span className="material-symbols-outlined text-sm mr-1">add</span>
           Add New User
         </button>
@@ -139,9 +133,11 @@ const UserTable = ({
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        user.status === UserStatus.Active
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
+                        user.status === UserStatus.Active ?
+                          "bg-green-100 text-green-800"
+                        : user.status === UserStatus.Banned ?
+                          "bg-red-100 text-red-800"
+                        : "bg-yellow-100 text-yellow-800"
                       }`}
                     >
                       {getStatusLabel(user.status)}
@@ -150,28 +146,28 @@ const UserTable = ({
                   <td className="px-6 py-4 whitespace-nowrap text-xl font-medium space-x-2">
                     {onView && (
                       <button
-                        onClick={() => {onView(user); handleCurrentUser(user)}}
+                        onClick={() => {onView(user)}}
                         className="text-blue-600 hover:text-blue-900 transition-colors duration-200 hover:underline"
                       >
                         <FaEye className="inline-block mr-1" />
                       </button>
                     )}
-                    {onEdit && (
-                      <button
-                        onClick={() => onEdit(user)}
-                        className="text-emerald-600 hover:text-emerald-900 transition-colors duration-200 hover:underline"
-                        title="Edit"
-                      >
-                        <FaPencilAlt className="inline-block mr-1" />
-                      </button>
-                    )}
                     {onDelete && (
                       <button
-                        onClick={() => onDelete(user)}
+                        onClick={() => {onDelete(user)}}
                         className="text-red-600 hover:text-red-900 transition-colors duration-200 hover:underline"
                         title="Delete"
                       >
                         <FaRegTrashCan className="inline-block mr-1" />
+                      </button>
+                    )}
+                    {onBan && (
+                      <button
+                        onClick={() => onBan(user)}
+                        className="text-emerald-600 hover:text-emerald-900 transition-colors duration-200 hover:underline"
+                        title="Ban"
+                      >
+                        <FaGavel className="inline-block mr-1" />
                       </button>
                     )}
                   </td>
@@ -199,17 +195,6 @@ const UserTable = ({
           totalItems={isServerSidePagination ? totalItems : users.length}
           />
       </div>
-
-      <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        className="w-2/4 h-3/4"
-        children= {
-          selectedUser && (
-          <ViewModal user={selectedUser} />
-        )}
-      />
-
     </div>
   );
 };

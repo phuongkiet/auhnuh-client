@@ -2,7 +2,7 @@ import axios, {AxiosError, AxiosResponse} from "axios";
 import {router} from "../router/route.tsx";
 import {toast} from "react-toastify";
 import {store} from "../stores/store.ts";
-import {User, UserAdminDTO, UserDTO, UserLoginFormValues} from "../models/user.model.ts";
+import {AddUserDTO, User, UserAdminDTO, UserDTO, UserLoginFormValues} from "../models/user.model.ts";
 import {MovieDetailDTO, MovieDTO} from "../models/movie.model.ts";
 import {CategoryDTO} from "../models/category.model.ts";
 import {PagedModel} from "../models/PagedModel.model.ts";
@@ -125,7 +125,7 @@ const UserAdmin = {
 
     adminDetails: (id: number): Promise<ApiResponseModel<UserDTO>> => requests.get<UserDTO>(`/users/user-detail?id=${id}`),
 
-    adminCreate: (user: UserAdminDTO): Promise<ApiResponseModel<UserAdminDTO>> => requests.post<UserAdminDTO>('/users/add-user', user),
+    adminCreate: (user: AddUserDTO): Promise<ApiResponseModel<UserAdminDTO>> => requests.post<UserAdminDTO>('/users/add-user', user),
 
     adminUpdate: (id: number, user: UserAdminDTO): Promise<ApiResponseModel<UserAdminDTO>> => requests.put<UserAdminDTO>(`/users/update-user?id=${id}`, user),
 
