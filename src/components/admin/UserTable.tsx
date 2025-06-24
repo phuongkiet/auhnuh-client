@@ -155,7 +155,7 @@ const UserTable = ({
                     {onDelete && (
                       <button
                         onClick={() => {onDelete(user)}}
-                        className="text-red-600 hover:text-red-900 transition-colors duration-200 hover:underline"
+                        className="text-emerald-600 hover:text-emerald-900 transition-colors duration-200 hover:underline"
                         title="Delete"
                       >
                         <FaRegTrashCan className="inline-block mr-1" />
@@ -164,7 +164,7 @@ const UserTable = ({
                     {onBan && (
                       <button
                         onClick={() => onBan(user)}
-                        className="text-emerald-600 hover:text-emerald-900 transition-colors duration-200 hover:underline"
+                        className="text-red-600 hover:text-red-900 transition-colors duration-200 hover:underline"
                         title="Ban"
                       >
                         <FaGavel className="inline-block mr-1" />

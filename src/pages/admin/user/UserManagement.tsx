@@ -6,7 +6,7 @@ import UserTable from "../../../components/admin/UserTable";
 import { useModal } from "../../../hooks/useModal.ts";
 import Modal from "../../../components/modal";
 import AddModal from "../../../components/modal/admin/UserManagement/addUser";
-import ViewModal from "../../../components/modal/admin/UserManagement/viewUser";
+import ViewModal from "../../../components/modal/admin/UserManagement/detailUser.tsx";
 import DeleteModal from "../../../components/modal/admin/UserManagement/deleteUser";
 import BanModal from "../../../components/modal/admin/UserManagement/banUser.tsx";
 import { UserAdminDTO } from "../../../app/models/user.model.ts";
