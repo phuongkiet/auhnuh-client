@@ -24,7 +24,7 @@ const addModal = ({onClose}: {onClose: () => void}) => {
         toast.error("Please select a role.");
         return;
       }
-      const response = await agent.UserAdmin.adminCreate(user);
+      const response = await agent.UserAdmin.addUser(user);
       if (response.success) {
         // Handle success, e.g., show a success message or update the UI
         console.log("User added successfully:", response.data);
@@ -44,7 +44,7 @@ const addModal = ({onClose}: {onClose: () => void}) => {
   return (
     <div className= "items-center justify-center overflow-y-auto modal z-99999 mt-5">
       <div className="p-6 rounded-lg">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">User Details</h2>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">Add new user</h2>
 
         <div className="space-y-3 text-sm text-gray-700">
 

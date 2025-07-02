@@ -9,6 +9,7 @@ import MovieStreaming from "../../pages/movie/MovieStreaming.tsx";
 import {ProtectedRoute} from "./protectedRoute.tsx";
 import UserManagement from "../../pages/admin/user/UserManagement.tsx";
 import MovieManagement from "../../pages/admin/movie/MovieManagement.tsx";
+import CategoryManagement from "../../pages/admin/category/CategoryManagement.tsx";
 import MovieList from "../../pages/movie/MovieList.tsx";
 
 export const routes: RouteObject[] = [
@@ -19,6 +20,7 @@ export const routes: RouteObject[] = [
             {element : <ProtectedRoute allowedRoles={['Admin']}/>, children: [
                     {path: '/admin/users', element: <UserManagement/>},
                     {path: '/admin/movies', element: <MovieManagement/>},
+                    {path: '/admin/categories', element: <CategoryManagement/>},
                 ]},
             {
               path: "/",

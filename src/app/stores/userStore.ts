@@ -12,13 +12,19 @@ import { toast } from "react-toastify";
 export default class UserStore {
   user: User | undefined = undefined;
   userAdmin: UserAdminDTO[] = [];
-  total: number | undefined = 0;
-  pageNumber: number = 1;
+  totalPages: number = 0;
+  totalItems: number = 0;
+  pageSize: number = 5;
+  currentPage: number = 1;
   term: string = "";
 
   constructor() {
     makeAutoObservable(this);
   }
+
+  setCurrentPage = (page: number) => {
+        this.currentPage = page;
+    };
 
   login = async (creds: UserLoginFormValues) => {
     const user = await agent.Account.login(creds);
@@ -74,37 +80,26 @@ export default class UserStore {
       }
     });
   };
+  
+  getAdminUsers = async () => {
+    try {
+      const response = await agent.UserAdmin.adminList(this.pageSize, this.currentPage, this.term);
+      console.log(response.data);
+      if (response.data) {
+        this.userAdmin = response.data!.results;
+        this.totalPages = response.data!.totalPage;
+        this.totalItems = response.data!.totalItems;
+      }
+    } catch (err) {
+      toast.error("Error: " + err);
+    }
+  };
 
   setAdminUser = (userAdmin: UserAdminDTO[]) => {
     this.userAdmin = userAdmin;
   };
 
-  setTotal = (total: number | undefined) => {
-    this.total = total;
-  };
-
-  setPageNumber = (pageNumber: number) => {
-    this.pageNumber = pageNumber;
-  };
-
   setTerm = (term: string) => {
     this.term = term;
-  };
-
-  adminList = async () => {
-    try {
-      const response = await agent.UserAdmin.adminList(
-        5,
-        this.pageNumber,
-        this.term
-      );
-      console.log(response.data);
-      if (response.data) {
-        this.setAdminUser(response.data.results);
-        this.setTotal(response.data.totalPage);
-      }
-    } catch (err) {
-      toast.error("Error: " + err);
-    }
   };
 }

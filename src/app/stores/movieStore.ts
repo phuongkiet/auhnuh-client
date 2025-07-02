@@ -11,7 +11,7 @@ export default class MovieStore {
     totalPages: number = 0;
     totalItems: number = 0;
     currentPage: number = 1;
-    pageSize: number = 10;
+    pageSize: number = 5;
     term: string = "";
     constructor() {
         makeAutoObservable(this);

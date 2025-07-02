@@ -13,12 +13,9 @@ import { UserAdminDTO } from "../../../app/models/user.model.ts";
 
 const UserManagement = () => {
   const { userStore } = useStore();
-  const {
-    adminList,
-    userAdmin,
-    pageNumber,
-    total,
-  } = userStore;
+  const { userAdmin, pageSize, currentPage, totalItems, totalPages } = userStore;
+
+  console.log("UserManagement render:", { currentPage, totalPages, usersLength: userAdmin.length });
 
   const { isOpen, openModal, closeModal } = useModal();
   const { isOpenDetail, openModalDetail, closeModalDetail } = useModal();
@@ -28,7 +25,7 @@ const UserManagement = () => {
   const [ selectedUser, setSelectedUser ] = useState<UserAdminDTO | null>(null);
 
   useEffect(() => {
-    adminList();
+    userStore.getAdminUsers();
   }, []);
 
   const handleCloseModal = async () => {
@@ -37,7 +34,7 @@ const UserManagement = () => {
     closeModalAdd(); 
     closeModalDelete()
     closeModalBan();
-    await userStore.adminList();
+    await userStore.getAdminUsers();
   }
 
   const handleAddUser = () => {
@@ -70,8 +67,9 @@ const UserManagement = () => {
   };
 
   const handlePageChange = action(async (page: number) => {
-    userStore.setPageNumber(page);
-    await userStore.adminList();
+    console.log("UserManagement handlePageChange called with page:", page);
+    userStore.setCurrentPage(page);
+    await userStore.getAdminUsers();
   });
 
   return (
@@ -88,10 +86,10 @@ const UserManagement = () => {
         onBan={handleBanUser}
         onDelete={handleDeleteUser}
         onView={handleViewUser}
-        itemsPerPage={5}
-        totalPages={total || 1}
-        totalItems={userAdmin.length * (total || 1)}
-        currentPage={pageNumber}
+        itemsPerPage={pageSize}
+        totalPages={totalPages}
+        totalItems={totalItems}
+        currentPage={currentPage}
         onPageChange={handlePageChange}
       />
 

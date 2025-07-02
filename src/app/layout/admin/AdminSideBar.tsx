@@ -78,7 +78,7 @@ const AdminSideBar = () => {
                         {open && (
                             <ul className="ml-6 mt-2 space-y-1">
                                 <li>
-                                    <NavLink to="/admin/categories/list" className="block p-2 rounded-lg hover:bg-slate-700">
+                                    <NavLink to="/admin/categories" className="block p-2 rounded-lg hover:bg-slate-700">
                                         All Categories
                                     </NavLink>
                                 </li>

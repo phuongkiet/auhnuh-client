@@ -4,7 +4,7 @@ import {toast} from "react-toastify";
 import {store} from "../stores/store.ts";
 import {AddUserDTO, User, UserAdminDTO, UserDTO, UserLoginFormValues} from "../models/user.model.ts";
 import {MovieDetailDTO, MovieDTO} from "../models/movie.model.ts";
-import {CategoryDTO} from "../models/category.model.ts";
+import {CategoryDTO, AddCategoryDTO} from "../models/category.model.ts";
 import {PagedModel} from "../models/PagedModel.model.ts";
 
 export interface ApiResponseModel<T> {
@@ -123,20 +123,37 @@ const UserAdmin = {
         return requests.get<PagedModel<UserAdminDTO>>(`/users?${params.toString()}`);
     },
 
-    adminDetails: (id: number): Promise<ApiResponseModel<UserDTO>> => requests.get<UserDTO>(`/users/user-detail?id=${id}`),
+    getUserDetails: (id: number): Promise<ApiResponseModel<UserDTO>> => requests.get<UserDTO>(`/users/user-detail?id=${id}`),
 
-    adminCreate: (user: AddUserDTO): Promise<ApiResponseModel<UserAdminDTO>> => requests.post<UserAdminDTO>('/users/add-user', user),
+    addUser: (user: AddUserDTO): Promise<ApiResponseModel<UserAdminDTO>> => requests.post<UserAdminDTO>('/users/add-user', user),
 
-    adminUpdate: (id: number, user: UserAdminDTO): Promise<ApiResponseModel<UserAdminDTO>> => requests.put<UserAdminDTO>(`/users/update-user?id=${id}`, user),
+    updateUser: (id: number, user: UserAdminDTO): Promise<ApiResponseModel<UserAdminDTO>> => requests.put<UserAdminDTO>(`/users/update-user?id=${id}`, user),
 
-    adminDelete: (id: number): Promise<ApiResponseModel<UserAdminDTO>> => requests.del<UserAdminDTO>(`/users/delete-user?id=${id}`),
+    deleteUser: (id: number): Promise<ApiResponseModel<UserAdminDTO>> => requests.del<UserAdminDTO>(`/users/delete-user?id=${id}`),
 
-    adminBan: (id: number): Promise<ApiResponseModel<UserAdminDTO>> => requests.put<UserAdminDTO>(`/users/ban-user?id=${id}`, {}),
+    banUser: (id: number): Promise<ApiResponseModel<UserAdminDTO>> => requests.put<UserAdminDTO>(`/users/ban-user?id=${id}`, {}),
 
 }
 
 const Category = {
     list: (): Promise<ApiResponseModel<CategoryDTO[]>> => requests.get<CategoryDTO[]>('/categories'),
+
+    adminList: (pageSize?: number, pageNumber?: number, term?: string): Promise<ApiResponseModel<PagedModel<CategoryDTO>>> => {
+        const params = new URLSearchParams();
+        if (pageSize) params.append("pageSize", pageSize.toString());
+        if (pageNumber) params.append("pageNumber", pageNumber.toString());
+        if (term) params.append("term", term);
+
+        return requests.get<PagedModel<CategoryDTO>>(`/categories/admin-categories?${params.toString()}`);
+    },
+
+    getCategoryDetail: (id: number): Promise<ApiResponseModel<CategoryDTO>> => requests.get<CategoryDTO>(`/categories/category-detail?id=${id}`),
+
+    updateCategory: (id: number, category: CategoryDTO): Promise<ApiResponseModel<CategoryDTO>> => requests.put<CategoryDTO>(`/categories/update-category?id=${id}`, category),
+
+    addCategory: (category: AddCategoryDTO): Promise<ApiResponseModel<CategoryDTO>> => requests.post<CategoryDTO>('/categories/add-category', category),
+
+    deleteCategory: (id: number): Promise<ApiResponseModel<CategoryDTO>> => requests.del<CategoryDTO>(`/categories/delete-category?id=${id}`),
 }
 
 const agent = {

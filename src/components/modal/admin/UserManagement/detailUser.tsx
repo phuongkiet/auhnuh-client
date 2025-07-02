@@ -16,7 +16,7 @@ const viewModal = ({user, onClose}: {user: UserAdminDTO; onClose: () => void}) =
         toast.error("Please select a role.");
         return;
       }
-      const response = await agent.UserAdmin.adminUpdate(user.id, user);
+      const response = await agent.UserAdmin.updateUser(user.id, user);
       if (response.success) {
         // Handle success, e.g., show a success message or update the UI
         console.log("User updated successfully:", response.data);

@@ -6,7 +6,7 @@ const banModal = ({idUser, onClose}: {idUser: number, onClose: () => void}) => {
 
   const handleBanUser = async () => {
     try {
-      const response = await agent.UserAdmin.adminBan(idUser);
+      const response = await agent.UserAdmin.banUser(idUser);
       if (response.success) {
         toast.success("User banned successfully!");
         onClose(); // Close the modal after successful deletion
